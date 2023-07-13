@@ -1,0 +1,8 @@
+- name: Baserow
+  hosts: phenotips
+- name: Freescout
+  hosts: freescout
+- name: webrelay
+  hosts: phenotips
+- name: cads_data_exchange
+  hosts: phenotips

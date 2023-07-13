@@ -3,7 +3,7 @@ all:
     freescout:
       ansible_host: s-c17-wmg-app01.charite.de
       ansible_user: zhaom
-      ansible_sudo_password: !vault |
+      ansible_become_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           30613664643261346438333362326666346366323263336133653038633064646236303166666537
           6364366131323933383339636237646535333062623364610a393234343466623139656637376433
@@ -14,7 +14,7 @@ all:
     phenotips:
       ansible_host: s-bcrt-webdb01.charite.de
       ansible_user: zhaom
-      ansible_sudo_password: !vault |
+      ansible_become_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           38323839386230376262366234356563386434663866616635383835666137326135353365366537
           3738363133633531626136663030356339386366643636350a643264366432356664633136376334
