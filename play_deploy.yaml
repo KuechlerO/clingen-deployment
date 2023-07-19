@@ -25,6 +25,13 @@
         mode: '0775'
         owner: "{{ run_user }}"
         group: "{{ run_group }}"
+    - name: Ensuring basic environment vars are set
+      ansible.builtin.blockinfile:
+        path: /etc/environment
+        block: |
+          http_proxy="http://proxy.charite.de:8080"
+          https_proxy="http://proxy.charite.de:8080"
+          no_proxy="bihealth.org,charite.de,laborberlin.intern"
 - name: Baserow
   hosts: phenotips
   tasks:
@@ -32,6 +39,15 @@
       ansible.builtin.git:
         repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/phenotips-gc.git
         dest: "{{ deploy_root}}/phenotips-baserow"
+    - name: Ensure cronjobs repository exists
+      ansible.builtin.git:
+        repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/cads_data_exchange.git
+        dest: "{{ deploy_root}}/cads_data_exchange"
+    - name: Ensure dependencies are installed
+      become: true
+      apt:
+        name: mdbtools
+        state: latest
 - name: Freescout
   hosts: freescout
   tasks:
