@@ -1,0 +1,16 @@
+- name: Systemd mounts
+  hosts: phenotips
+  become: true
+  tasks:
+    - name: Install systemd mount files
+      template: src=./mounts/media-WMG.mount dest=/etc/systemd/system/media-WMG.mount
+    - name: Ensure mountpoint exists
+      ansible.builtin.file:
+        path: /media/WMG
+        state: directory
+        mode: '0755'
+    - name: Enable and start mountpoint
+      ansible.builtin.systemd:
+        name: media-WMG.mount
+        state: started
+        enabled: true
