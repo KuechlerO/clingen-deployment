@@ -43,11 +43,21 @@
       ansible.builtin.git:
         repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/cads_data_exchange.git
         dest: "{{ deploy_root}}/cads_data_exchange"
+    - name: Place baserow token
+      copy:
+        dest: "{{ deploy_root}}/cads_data_exchange/.baserow_token"
+        content: "{{ baserow_token }}"
     - name: Ensure dependencies are installed
       become: true
       apt:
         name: mdbtools
         state: latest
+    - name: Create frequent data exchange cronjob
+      cron:
+        name: Sync terminland
+        user: "{{ control_user }}"
+        minute: "3-59/5"
+        job: "{{ deploy_root}}/cads_data_exchange/cron_frequent.sh"
 - name: Freescout
   hosts: freescout
   tasks:
