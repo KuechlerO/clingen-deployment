@@ -1,0 +1,12 @@
+- name: Install docker
+  import_tasks: docker.yaml
+- name: Setup proxies
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/environment
+    block: |
+      http_proxy="http://proxy.charite.de:8080"
+      https_proxy="http://proxy.charite.de:8080"
+      no_proxy="bihealth.org,charite.de,laborberlin.intern"
+- name: Install micromamba
+  import_tasks: micromamba.yaml

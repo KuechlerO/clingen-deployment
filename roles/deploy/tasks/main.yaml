@@ -1,0 +1,26 @@
+- name: Create a deployment user
+  become: true
+  block:
+  - name: Create deploy group
+    ansible.builtin.group:
+      name: "{{ run_group }}"
+      gid: 1055
+  - name: Ensure control user is in deploy group
+    ansible.builtin.user:
+      name: "{{ control_user }}"
+      append: true
+      groups: "{{ run_group }}"
+  - name: Create user for running services
+    ansible.builtin.user:
+      name: "{{ run_user }}"
+      comment: Clingen Deployment user
+      password: "{{ deploy_user_password | password_hash('sha512', 'clingen') }}"
+      uid: 1055
+      groups: docker
+  - name: Ensure srv exists and is accessible
+    ansible.builtin.file:
+      path: "{{ deploy_root }}"
+      state: directory
+      mode: '0775'
+      owner: "{{ run_user }}"
+      group: "{{ run_group }}"

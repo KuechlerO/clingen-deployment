@@ -1,0 +1,12 @@
+- name: Download micromamba latest binary
+  ansible.builtin.unarchive:
+    src: https://micro.mamba.pm/api/micromamba/linux-64/latest
+    dest: /tmp/
+    remote_src: yes
+- name: Copy micromamba to bin
+  become: true
+  ansible.builtin.copy:
+    src: /tmp/bin/micromamba
+    dest: /usr/local/bin
+    remote_src: yes
+    mode: '0555'

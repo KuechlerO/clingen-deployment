@@ -1,0 +1,23 @@
+- name: Install systemd mount files
+  become: true
+  copy:
+    src: media-WMG.mount
+    dest: /etc/systemd/system/media-WMG.mount
+- name: Ensure mountpoint exists
+  become: true
+  ansible.builtin.file:
+    path: /media/WMG
+    state: directory
+    mode: '0755'
+- name: Create secrets
+  become: true
+  ansible.builtin.template:
+    src: credentials_cifs.j2
+    dest: /opt/.credentials_cifs
+    mode: '0400'
+- name: Enable and start mountpoint
+  become: true
+  ansible.builtin.systemd:
+    name: media-WMG.mount
+    state: started
+    enabled: true

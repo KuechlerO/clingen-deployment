@@ -1,0 +1,11 @@
+[Unit]
+Description=Network drive
+
+[Mount]
+Where=/media/WMG
+What=//charite.de/centren/C17/WMG
+Type=cifs
+Options=credentials=/opt/.credentials_cifs,ro,nofail
+
+[Install]
+WantedBy=multi-user.target
