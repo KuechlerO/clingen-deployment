@@ -10,6 +10,7 @@
   roles:
     - deploy
     - wmg_read_only
+    - wmg_baserow_export
   tasks:
     - name: Ensure git repository exists
       ansible.builtin.git:

@@ -5,7 +5,7 @@ Description=Network drive
 Where=/media/WMG
 What=//charite.de/centren/C17/WMG
 Type=cifs
-Options=credentials=/opt/.credentials_cifs,ro,nofail
+Options=credentials=/opt/.credentials_cifs,ro,nofail,x-systemd.mount-timeout=infinity,x-systemd.automount
 
 [Install]
 WantedBy=multi-user.target
