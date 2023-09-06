@@ -24,6 +24,10 @@
       copy:
         dest: "{{ deploy_root}}/cads_data_exchange/.baserow_token"
         content: "{{ baserow_token }}"
+    - name: Place Backup password
+      copy:
+        dest: "{{ deploy_root}}/cads_data_exchange/.backup_password"
+        content: "{{ backup_password }}"
     - name: Ensure dependencies are installed
       become: true
       apt:
@@ -35,3 +39,9 @@
         user: "{{ control_user }}"
         minute: "3-59/5"
         job: "{{ deploy_root}}/cads_data_exchange/cron_frequent.sh"
+    - name: Create bidaily data exchange cronjob
+      cron:
+        name: Sync baserow
+        user: "{{ control_user }}"
+        hour: "12,17,5"
+        job: "{{ deploy_root}}/cads_data_exchange/cron.sh"

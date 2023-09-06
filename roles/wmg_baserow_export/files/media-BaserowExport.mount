@@ -5,7 +5,7 @@ Description=Network drive
 Where=/media/BaserowExport
 What=//charite.de/centren/C17/WMG/Bildverarbeitung/CADS-UnklDiagnose/Baserow-Export
 Type=cifs
-Options=credentials=/opt/.credentials_cifs,rw,nofail,x-systemd.mount-timeout=infinity,x-systemd.automount
+Options=credentials=/opt/.credentials_cifs,rw,nofail,x-systemd.mount-timeout=infinity,x-systemd.automount,dir_mode=0770,file_mode=0660,gid=1055,uid=1055
 
 [Install]
 WantedBy=multi-user.target
