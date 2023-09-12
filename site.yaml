@@ -24,6 +24,10 @@
       copy:
         dest: "{{ deploy_root}}/cads_data_exchange/.baserow_token"
         content: "{{ baserow_token }}"
+    - name: Place SAMS credentials
+      copy:
+        dest: "{{ deploy_root}}/cads_data_exchange/.sams_credentials"
+        content: "{{ sams_user }}\n{{ sams_pass }}"
     - name: Place Backup password
       copy:
         dest: "{{ deploy_root}}/cads_data_exchange/.backup_password"
@@ -43,5 +47,6 @@
       cron:
         name: Sync baserow
         user: "{{ control_user }}"
+        minute: "15"
         hour: "12,17,5"
         job: "{{ deploy_root}}/cads_data_exchange/cron.sh"
