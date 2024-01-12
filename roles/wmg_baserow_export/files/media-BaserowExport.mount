@@ -1,5 +1,7 @@
 [Unit]
 Description=Network drive
+Requires=dns-check-charite.service
+After=dns-check-charite.service
 
 [Mount]
 Where=/media/BaserowExport

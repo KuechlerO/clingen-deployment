@@ -1,0 +1,13 @@
+- name: Charite DNS check
+  become: true
+  block:
+  - name: Copy service to remote
+    copy:
+      src: dns-check-charite.service
+      dest: /etc/systemd/system/dns-check-charite.service
+  - name: Enable and start service
+    ansible.builtin.systemd_service:
+      name: dns-check-charite.service
+      enabled: true
+      daemon_reload: true
+      state: started

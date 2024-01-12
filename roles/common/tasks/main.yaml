@@ -10,3 +10,5 @@
       no_proxy="bihealth.org,charite.de,laborberlin.intern"
 - name: Install micromamba
   import_tasks: micromamba.yaml
+- name: Install charite DNS check
+  import_tasks: charite-dns.yaml

@@ -1,0 +1,11 @@
+[Unit]
+  Description=check if DNS is up before proceeding
+  After=network-online.target
+
+[Service]
+  Type=oneshot
+  ExecStartPre=/bin/bash -c 'until host charite.de; do sleep 1; done'
+  ExecStart=/bin/bash -c 'echo "DNS up!"'
+
+[Install]
+  WantedBy=multi-user.target
