@@ -1,10 +1,20 @@
 set positional-arguments
 
+HOSTS := "hosts.yml"
+PASSFILE := ".pass-ansible.txt"
+
 ping:
-	ansible all -m ping -i hosts.yaml
-local:
-	ansible-playbook -i hosts.yaml -e @tokens.yaml --ask-become-pass --vault-password-file .pass-ansible.txt local.yaml
+	ansible all -m ping -i {{HOSTS}}
+
 play name:
-	ansible-playbook -i hosts.yaml -e @tokens.yaml --vault-password-file .pass-ansible.txt {{name}}.yaml
-@vedit:
-	ansible-vault edit --vault-password-file .pass-ansible.txt tokens.yaml
+	ansible-playbook -i {{HOSTS}} --vault-password-file {{PASSFILE}} {{name}}.yml
+
+test name:
+	./test-playbook {{name}}.yml
+
+@vedit encfile:
+	ansible-vault edit --vault-password-file {{PASSFILE}} {{encfile}}
+@venc encfile:
+	ansible-vault encrypt --vault-password-file {{PASSFILE}} {{encfile}}
+@vdenc encfile:
+	ansible-vault decrypt --vault-password-file {{PASSFILE}} {{encfile}}

@@ -1,0 +1,8 @@
+---
+dependencies:
+  - role: geerlingguy.docker
+    become: yes
+  - role: deploy
+  - role: certs
+    vars:
+      application_name: baserow

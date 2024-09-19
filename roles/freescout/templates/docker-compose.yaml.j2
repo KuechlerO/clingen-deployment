@@ -1,0 +1,70 @@
+version: '3.1'
+
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+      - ./nginx_custom.conf:/etc/nginx/conf.d/custom.conf
+  freescout-app:
+    image: tiredofit/freescout:php7.4
+    container_name: freescout-app
+    volumes:
+      - /data01/freescout-data:/data
+      - /data01/freescout-logs:/www/logs
+    environment:
+      - VIRTUAL_HOST={{ host_url }}
+      - VIRTUAL_PORT=80
+      - CONTAINER_NAME=freescout-app
+      - DB_HOST=freescout-db
+      - DB_NAME=freescout
+      - DB_USER=freescout
+      - DB_PASS=$FREESCOUT_DB_PASS
+      - APP_PROXY={{ proxy_url }}
+      - SITE_URL=https://{{ host_url }}
+      - ADMIN_EMAIL=$FREESCOUT_ADMIN_EMAIL
+      - ADMIN_PASS=$FREESCOUT_ADMIN_PASS
+      - ENABLE_SSL_PROXY=TRUE
+      - DISPLAY_ERRORS=FALSE
+      - TIMEZONE=Europe/Berlin
+    restart: always
+
+  freescout-db:
+    image: tiredofit/mariadb
+    container_name: freescout-db
+    volumes:
+      - /data01/freescout-db:/var/lib/mysql
+    environment:
+      - ROOT_PASS=$FREESCOUT_DB_ROOT_PASS
+      - DB_NAME=freescout
+      - DB_USER=freescout
+      - DB_PASS=$FREESCOUT_DB_PASS
+
+      - CONTAINER_NAME=freescout-db
+    restart: always
+
+  freescout-db-backup:
+    container_name: freescout-db-backup
+    image: tiredofit/db-backup
+    links:
+     - freescout-db
+    volumes:
+      - /data01/freescout-db-backup:/backup
+    environment:
+      - CONTAINER_NAME=freescout-db-backup
+      - DB_HOST=freescout-db
+      - DB_TYPE=mariadb
+      - DB_NAME=freescout
+      - DB_USER=freescout
+      - DB_PASS=$FREESCOUT_DB_PASS
+      - DB_DUMP_FREQ=1440
+      - DB_DUMP_BEGIN=0000
+      - DB_CLEANUP_TIME=8640
+      - COMPRESSION=BZ
+      - MD5=TRUE
+    restart: always

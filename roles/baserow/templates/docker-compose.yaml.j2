@@ -1,0 +1,36 @@
+version: "3.4"
+services:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+      - ./nginx_custom.conf:/etc/nginx/conf.d/custom.conf
+  baserow:
+    container_name: baserow
+    image: baserow/baserow:latest
+    restart: always
+    environment:
+      BASEROW_PUBLIC_URL: 'https://{{ host_url }}'
+      BATCH_ROWS_SIZE_LIMIT: '30000'
+      BASEROW_ROW_PAGE_SIZE_LIMIT: '30000'
+      BASEROW_ALLOW_MULTIPLE_SSO_PROVIDERS_FOR_SAME_ACCOUNT: 'true'
+      FROM_EMAIL: '{{ baserow_email }}'
+      EMAIL_SMTP: 'y'
+      EMAIL_SMTP_HOST: '{{ baserow_email_smtp }}'
+      EMAIL_SMTP_PORT: '25'
+      EMAIL_SMTP_USER: '{{ baserow_email_smtp_user }}'
+      EMAIL_SMTP_PASSWORD:
+      HTTPS_PROXY: {{ proxy_url }}
+      HTTP_PROXY: {{ proxy_url }}
+      NO_PROXY: localhost
+      no_proxy: localhost
+      VIRTUAL_HOST: {{ host_url }}
+    volumes:
+      - baserow_data:/baserow/data
+volumes:
+  baserow_data:

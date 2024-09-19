@@ -14,7 +14,6 @@
     ansible.builtin.user:
       name: "{{ run_user }}"
       comment: Clingen Deployment user
-      password: "{{ deploy_user_password | password_hash('sha512', 'clingen') }}"
       uid: 1055
       groups: docker
   - name: Ensure srv exists and is accessible

@@ -1,9 +1,14 @@
-# - name: Setup deployment systems
-#   hosts:
-#     - freescout
-#     - phenotips
-#   roles:
-#     - deploy
+- name: Setup baserow on longer
+  hosts:
+    - longer
+    - phenotips
+  roles:
+    - baserow
+- name: Setup freescout on freescout
+  hosts:
+    - freescout
+  roles:
+    - freescout
 - name: Setup baserow and exchange utilies
   hosts:
     - phenotips
@@ -11,7 +16,6 @@
     - deploy
     - wmg_read_only
     - wmg_baserow_export
-    - certs
   tasks:
     - name: Ensure git repository exists
       ansible.builtin.git:

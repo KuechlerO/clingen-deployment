@@ -1,0 +1,5 @@
+host_url: localhost
+baserow_email: klinische-genetik@charite.de
+baserow_email_smtp: smtp-out.charite.de
+baserow_email_smtp_user: mb-klingen
+proxy_url:

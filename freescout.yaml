@@ -1,6 +1,0 @@
-- name: Setup basics
-  hosts:
-    - freescout
-  roles:
-    - deploy
-    - certs

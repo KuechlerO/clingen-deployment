@@ -1,0 +1,8 @@
+---
+dependencies:
+  - role: geerlingguy.docker
+    become: true
+  - role: deploy
+  - role: certs
+    vars:
+      application_name: freescout

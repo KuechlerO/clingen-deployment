@@ -11,6 +11,16 @@
       - python3-setuptools
     state: latest
     update_cache: true
+- name: Add Docker apt key.
+  ansible.builtin.get_url:
+    url: "{{ docker_apt_gpg_key }}"
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '0644'
+    force: false
+    checksum: "{{ docker_apt_gpg_key_checksum | default(omit) }}"
+  register: add_repository_key
+  ignore_errors: "{{ docker_apt_ignore_key_error }}"
+  when: docker_add_repo | bool
 - name: Add Docker GPG apt Key
   become: true
   apt_key:

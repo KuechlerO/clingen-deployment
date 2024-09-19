@@ -54,3 +54,53 @@ tools and services.
 
 This repository provides tools to automatically generate docx based reports for
 medgen.
+
+## Secrets management
+
+All secrets should be encrypted and decrypted using Ansible vault files. The
+commands in the justfile can be used for simplicity sake.
+
+Editing a vaulted file:
+
+```
+$ just vedit <path to file>
+```
+
+Creating a vaulted file:
+
+```
+# write a file with secret content at <path>
+$ just venc <path>
+```
+
+Decrypt a vaulted file (this will make the file plaintext!):
+
+```
+$ just vdenc <path>
+```
+
+### Managing server access passwords
+
+These are current set in `vault.yml` files in the `host_vars` directory.
+
+
+### Managing tokens and other secrets necessary for deployment
+
+These should be managed via `group_vars`.
+
+### Managing server certificates
+
+Automatic retrieval of ACME certificates is integrated in the certs role. Refer
+to the defaults vars to see which variables are needed.
+
+Currently the variables are mostly setup through vaulted host vars and the
+application specific `application_name` is set through a dependency var. The
+certs role should only be used as a dependency for another deployment that
+requires SSL certificates.
+
+Refer to the `baserow` role to see how it is used in action.
+
+### Issues with copying templates as unprivileged users
+
+Make sure `acl` is installed on the server. Sometimes will might require some
+form of reboot.

@@ -1,0 +1,40 @@
+- name: Ensure certbot installed
+  become: true
+  community.general.snap:
+    name:
+      - certbot
+    classic: true
+- name: Get certificates
+  become: true
+  ansible.builtin.command: |
+    certbot certonly --standalone --non-interactive --agree-tos \
+    --email {{ certbot_email }} \
+    --server https://acme.sectigo.com/v2/OV \
+    --eab-kid {{ certbot_key_id }} \
+    --eab-hmac-key {{ certbot_hmac_key }}  \
+    --issuance-timeout 9000 \
+    --domain {{ host_url }} \
+    --cert-name {{ host_url }}
+  register: certbot_output
+  changed_when: "'Certificate not yet due for renewal' not in certbot_output.stdout"
+- name: Create certs folder
+  become: true
+  file:
+    path: "{{ deploy_root }}/{{ application_name }}/certs"
+    state: directory
+- name: Copy certificates to certs deploy folder
+  become: true
+  ansible.builtin.copy:
+    src: /etc/letsencrypt/live/{{ host_url }}/privkey.pem
+    remote_src: true
+    dest: "{{ deploy_root }}/{{ application_name }}/certs/{{ host_url }}.key"
+    owner: "{{ run_user }}"
+    group: "{{ run_group }}"
+- name: Copy certificates to certs deploy folder
+  become: true
+  ansible.builtin.copy:
+    src: /etc/letsencrypt/live/{{ host_url }}/fullchain.pem
+    remote_src: true
+    dest: "{{ deploy_root }}/{{ application_name }}/certs/{{ host_url }}.crt"
+    owner: "{{ run_user }}"
+    group: "{{ run_group }}"

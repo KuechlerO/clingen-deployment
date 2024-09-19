@@ -1,5 +1,0 @@
-github_user: xiamaz
-control_user: zhaom
-run_user: cgdeploy
-run_group: cgdeploy
-deploy_root: /srv/clingen_deployment
