@@ -23,3 +23,15 @@
       mode: '0775'
       owner: "{{ run_user }}"
       group: "{{ run_group }}"
+  - name: Create docker config folder
+    become_user: "{{ run_user }}"
+    ansible.builtin.file:
+      path: "~/.docker/"
+      state: directory
+  - name: Create docker config json
+    become_user: "{{ run_user }}"
+    ansible.builtin.template:
+      dest: "~/.docker/config.json"
+      src: "config.json.j2"
+      owner: "{{ run_user }}"
+      group: "{{ run_group }}"

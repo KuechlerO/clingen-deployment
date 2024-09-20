@@ -17,10 +17,6 @@
     - wmg_read_only
     - wmg_baserow_export
   tasks:
-    - name: Ensure git repository exists
-      ansible.builtin.git:
-        repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/phenotips-gc.git
-        dest: "{{ deploy_root}}/phenotips-baserow"
     - name: Ensure cronjobs repository exists
       ansible.builtin.git:
         repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/cads_data_exchange.git
@@ -61,3 +57,32 @@
         minute: "15"
         hour: "12,17,5"
         job: "{{ deploy_root}}/cads_data_exchange/cron.sh"
+- name: Setup clinical report templating
+  hosts:
+    - phenotips
+  tasks:
+    - name: Download repository
+      become: yes
+      become_user: "{{ run_user }}"
+      ansible.builtin.git:
+        repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/clinical-report-templating.git
+        dest: "{{ deploy_root}}/clinical-report-templating"
+    - name: Place env configuration
+      become: yes
+      become_user: "{{ run_user }}"
+      template:
+        dest: "{{ deploy_root }}/clinical-report-templating/.env"
+        src: "templates/clinical-report-templating.env.j2"
+        owner: "{{ run_user }}"
+        group: "{{ run_group }}"
+        mode: 440
+    - name: Create and start service
+      become: yes
+      become_user: "{{ run_user }}"
+      community.docker.docker_compose_v2:
+        project_src: "{{ deploy_root }}/clinical-report-templating"
+        build: "always"
+      register: output
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
