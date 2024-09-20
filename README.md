@@ -29,16 +29,20 @@ $ just vedit
 
 ## Overview of services
 
-### [baserow](https://github.com/xiamaz/phenotips-gc)
+### baserow
 
-This provides the no-code database, which is used to track samples and
-diagnostic status across Medgen and contains links and integrations provided
-below.
+The baserow role `./roles/baserow` provides tasks and templates for deploying a
+baserow installation using docker compose.
 
-### [freescout](https://github.com/xiamaz/freescout-charite)
+The role depends on the [certs](##Managing server certificates) rule, which will automatically fetch certificates
+for the given host. This will require key id and hmac key to be defined for the
+individual host. These should stay private and should be best kept in a vaulted
+file.
 
-This provides a web tool for managing email-based tickets, which is used by the
-genomics department to track external requests and assign these to clinicians.
+### freescout
+
+The freescout role `./roles/freescout` is analogous to the baserow role, but
+just provides a different docker compose template currently.
 
 ### [webrelay](https://github.com/xiamaz/webrelay)
 
@@ -99,6 +103,10 @@ certs role should only be used as a dependency for another deployment that
 requires SSL certificates.
 
 Refer to the `baserow` role to see how it is used in action.
+
+Using the role on a new host will require a key id and hmac key for certbot.
+These can be obtained through [netz-pki](https://netz-pki.charite.de/) at
+Charité.
 
 ### Issues with copying templates as unprivileged users
 
