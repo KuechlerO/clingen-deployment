@@ -4,7 +4,7 @@ HOSTS := "hosts.yml"
 PASSFILE := ".pass-ansible.txt"
 
 ping:
-	ansible all -m ping -i {{HOSTS}}
+	ansible all -m ping -i {{HOSTS}} --vault-password-file {{PASSFILE}}
 
 play name:
 	ansible-playbook -i {{HOSTS}} --vault-password-file {{PASSFILE}} {{name}}.yml
