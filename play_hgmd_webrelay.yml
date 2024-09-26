@@ -1,0 +1,33 @@
+- name: Setup HGMD WebRelay on phenotips
+  hosts:
+    - phenotips
+  vars: 
+    - application_name: hgmd_webrelay
+    - branch_name: include_certificates
+  roles:
+    - deploy
+
+  tasks:
+    - name: Download repository
+      become: yes
+      become_user: "{{ run_user }}"
+      ansible.builtin.git:
+        repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/webrelay.git
+        dest: "{{ deploy_root}}/{{ application_name }}"
+        version: "{{ branch_name }}"
+
+    - name: Include certs role
+      include_role:
+        name: certs
+
+    - name: Create and start docker compose service
+      become: yes
+      become_user: "{{ run_user }}"
+      community.docker.docker_compose_v2:
+        project_src: "{{ deploy_root }}/{{ application_name }}"
+        build: "always"
+      register: output
+
+    - name: Show results
+      ansible.builtin.debug:
+        var: output
