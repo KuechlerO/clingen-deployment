@@ -49,6 +49,9 @@ just provides a different docker compose template currently.
 This service provides access to certain variant analysis platforms, such as
 HGMD, as the Charité IP is changing.
 
+*Commands for setup*
+`ansible-playbook -i hosts.yml --vault-password-file <pass_file> play_hgmd_webrelay.yml`
+
 ### [baserow synchronization](https://github.com/xiamaz/cads_data_exchange)
 
 This repository provides automated scripts to synchronize services with other
@@ -58,6 +61,11 @@ tools and services.
 
 This repository provides tools to automatically generate docx based reports for
 medgen.
+
+*Commands for setup*
+`ansible-playbook -i hosts.yml --vault-password-file <pass_file> play_clinical_report_templating.yml`
+or
+`ansible-playbook -i hosts.yml --vault-password-file <pass_file> site.yml --tags "clinical_report_templating"`
 
 ## Secrets management
 
