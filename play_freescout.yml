@@ -1,0 +1,5 @@
+- name: Setup freescout on freescout
+  hosts:
+    - freescout
+  roles:
+    - freescout

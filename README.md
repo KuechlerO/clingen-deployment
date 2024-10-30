@@ -27,9 +27,18 @@ Edit secrets (stored in vaulted secrets)
 $ just vedit
 ```
 
+Test connection to hosts:
+
+```
+$ just ping
+$ ansible all -m ping -i hosts.yaml --vault-password-file .pass-ansible.txt
+```
+
 ## Overview of services
 
-### baserow
+### baserow (`play_baserow.yml`)
+Max' repo as import: https://github.com/xiamaz/cads_data_exchange
+Oli's repo as import: https://github.com/KuechlerO/cads_data_exchange
 
 The baserow role `./roles/baserow` provides tasks and templates for deploying a
 baserow installation using docker compose.
@@ -39,33 +48,47 @@ for the given host. This will require key id and hmac key to be defined for the
 individual host. These should stay private and should be best kept in a vaulted
 file.
 
-### freescout
+### baserow clinical report templating (`play_clinical_report_templating.yml`)
+Max' repo: https://github.com/xiamaz/clinical-report-templating
+Oli's repo: https://github.com/KuechlerO/clinical-report-templating
+
+Provides the necessary tools to generate clinical reports for medgen.
+
+
+### freescout (`play_freescout.yml`)
+The docker compose image is included in the freescout role.
 
 The freescout role `./roles/freescout` is analogous to the baserow role, but
 just provides a different docker compose template currently.
 
-### [webrelay](https://github.com/xiamaz/webrelay)
+
+### webrelay (`play_hgmd_webrelay.yml`)
+Max' repo: https://github.com/xiamaz/webrelay
+Oli's repo: https://github.com/KuechlerO/webrelay
 
 This service provides access to certain variant analysis platforms, such as
 HGMD, as the Charité IP is changing.
 
-*Commands for setup*
-`ansible-playbook -i hosts.yml --vault-password-file <pass_file> play_hgmd_webrelay.yml`
+*Commands for setup:*
+```
+play play_hgmd_webrelay.yml
+# OR
+ansible-playbook -i hosts.yml --vault-password-file <pass_file> play_hgmd_webrelay.yml
+```
+
 
 ### [baserow synchronization](https://github.com/xiamaz/cads_data_exchange)
+Oli's repo: https://github.com/KuechlerO/cads_data_exchange
 
 This repository provides automated scripts to synchronize services with other
 tools and services.
 
 ### [automated report generation](https://github.com/xiamaz/clinical-report-templating)
+Oli's repo: https://github.com/KuechlerO/clinical-report-templating
 
 This repository provides tools to automatically generate docx based reports for
 medgen.
 
-*Commands for setup*
-`ansible-playbook -i hosts.yml --vault-password-file <pass_file> play_clinical_report_templating.yml`
-or
-`ansible-playbook -i hosts.yml --vault-password-file <pass_file> site.yml --tags "clinical_report_templating"`
 
 ## Secrets management
 

@@ -10,7 +10,8 @@
       become: yes
       become_user: "{{ run_user }}"
       ansible.builtin.git:
-        repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/clinical-report-templating.git
+        # repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/clinical-report-templating.git
+        repo: https://github.com/KuechlerO/clinical-report-templating
         dest: "{{ deploy_root}}/{{ application_name }}"
         version: "{{ branch_name }}"
 
