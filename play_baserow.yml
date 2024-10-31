@@ -47,10 +47,18 @@
         user: "{{ control_user }}"
         minute: "3-59/5"
         job: "{{ deploy_root }}/cads_data_exchange/cron_frequent.sh"
-    - name: Create bidaily data exchange cronjob
+    - name: Create tri-daily data exchange cronjob
       cron:
         name: Sync baserow
         user: "{{ control_user }}"
         minute: "15"
         hour: "12,17,5"
         job: "{{ deploy_root }}/cads_data_exchange/cron.sh"
+
+    - name: Create daily docker backup cronjob
+      cron:
+        name: Backup baserow container
+        user: "{{ control_user }}"
+        minute: "0"
+        hour: "0"
+        job: "{{ deploy_root }}/cads_data_exchange/run_baserow_backup.sh"
