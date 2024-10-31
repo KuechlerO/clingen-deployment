@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-options="-i hosts.yaml"
+options="-i hosts.yml"
 playbook=$1
 shift
 

@@ -52,7 +52,9 @@ file.
 Max' repo: https://github.com/xiamaz/clinical-report-templating
 Oli's repo: https://github.com/KuechlerO/clinical-report-templating
 
-Provides the necessary tools to generate clinical reports for medgen.
+This repository provides tools to automatically generate docx based reports for
+medgen.
+
 
 
 ### freescout (`play_freescout.yml`)
@@ -76,12 +78,6 @@ play play_hgmd_webrelay.yml
 ansible-playbook -i hosts.yml --vault-password-file <pass_file> play_hgmd_webrelay.yml
 ```
 
-
-### [baserow synchronization](https://github.com/xiamaz/cads_data_exchange)
-Oli's repo: https://github.com/KuechlerO/cads_data_exchange
-
-This repository provides automated scripts to synchronize services with other
-tools and services.
 
 ### [automated report generation](https://github.com/xiamaz/clinical-report-templating)
 Oli's repo: https://github.com/KuechlerO/clinical-report-templating
@@ -122,6 +118,7 @@ These are current set in `vault.yml` files in the `host_vars` directory.
 ### Managing tokens and other secrets necessary for deployment
 
 These should be managed via `group_vars`.
+
 
 ### Managing server certificates
 
