@@ -10,6 +10,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./certs:/etc/nginx/certs
       - ./nginx_custom.conf:/etc/nginx/conf.d/custom.conf
+  
   baserow:
     container_name: baserow
     image: baserow/baserow:latest
@@ -19,6 +20,7 @@ services:
       BATCH_ROWS_SIZE_LIMIT: '30000'
       BASEROW_ROW_PAGE_SIZE_LIMIT: '30000'
       BASEROW_ALLOW_MULTIPLE_SSO_PROVIDERS_FOR_SAME_ACCOUNT: 'true'
+      BASEROW_WEBHOOKS_ALLOW_PRIVATE_ADDRESS: 'true'
       FROM_EMAIL: '{{ baserow_email }}'
       EMAIL_SMTP: 'y'
       EMAIL_SMTP_HOST: '{{ baserow_email_smtp }}'
@@ -27,10 +29,23 @@ services:
       EMAIL_SMTP_PASSWORD:
       HTTPS_PROXY: {{ proxy_url }}
       HTTP_PROXY: {{ proxy_url }}
-      NO_PROXY: localhost
-      no_proxy: localhost
+      NO_PROXY: localhost,{{ host_url }}
+      no_proxy: localhost,{{ host_url }}
       VIRTUAL_HOST: {{ host_url }}
     volumes:
       - baserow_data:/baserow/data
+
+  webhook-listener:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - HTTPS_PROXY
+    restart: always
+    working_dir: /app
+    command: ["gunicorn", "-w", "1", "-b", "0.0.0.0:5123", "--certfile=/etc/ssl/certs/cert.pem", "--keyfile=/etc/ssl/private/key.pem", "--log-level=info", "--access-logfile=-", "--error-logfile=-", "webhook_listener:app"]
+    ports:
+      - "5123:5123"
+
 volumes:
   baserow_data:
