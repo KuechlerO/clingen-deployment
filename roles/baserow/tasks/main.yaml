@@ -1,34 +1,71 @@
 - name: Create deploy folder
   become: yes
   file:
-    path: "{{ deploy_root }}/baserow"
+    path: "{{ deploy_root }}/ {{ application_name }}"
     state: directory
     owner: "{{ run_user }}"
     group: "{{ run_group }}"
+
 - name: Copy docker compose config to dest
   become: yes
   become_user: "{{ run_user }}"
   template:
     src: docker-compose.yaml.j2
-    dest: "{{ deploy_root }}/baserow/docker-compose.yaml"
+    dest: "{{ deploy_root }}/{{ application_name }}/docker-compose.yaml"
+
 - name: Copy nginx custom conf to dest
   become: yes
   become_user: "{{ run_user }}"
   copy:
     src: nginx_custom.conf
-    dest: "{{ deploy_root }}/baserow/"
+    dest: "{{ deploy_root }}/{{ application_name }}/"
+
+- name: Copy webhook listener python script to dest
+  become: yes
+  become_user: "{{ run_user }}"
+  copy:
+    src: webhook_listener.py
+    dest: "{{ deploy_root }}/{{ application_name }}/"
+
+- name: Copy requirements.txt to dest
+  become: yes
+  become_user: "{{ run_user }}"
+  copy:
+    src: webhook_requirements.txt
+    dest: "{{ deploy_root }}/{{ application_name }}/"
+  
+- name: Copy webhook-listener dockerfile to dest
+  become: yes
+  become_user: "{{ run_user }}"
+  copy:
+    src: Dockerfile
+    dest: "{{ deploy_root }}/{{ application_name }}/"
+
 - name: Create certs folder
   become: yes
   become_user: "{{ run_user }}"
   file:
-    path: "{{ deploy_root }}/baserow/certs"
+    path: "{{ deploy_root }}/{{ application_name }}/certs"
     state: directory
+
+- name: Place webhook-listener env configuration
+  become: yes
+  become_user: "{{ run_user }}"
+  template:
+    dest: "{{ deploy_root }}/{{ application_name }}/webhook_listener.env"
+    src: "templates/webhook_listener.env.j2"
+    owner: "{{ run_user }}"
+    group: "{{ run_group }}"
+    mode: 440
+
 - name: Create and start service
   become: yes
   become_user: "{{ run_user }}"
   community.docker.docker_compose_v2:
-    project_src: "{{ deploy_root }}/baserow"
+    project_src: "{{ deploy_root }}/{{ application_name }}"
+    build: always
   register: output
+
 - name: Show results
   ansible.builtin.debug:
     var: output

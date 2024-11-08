@@ -2,7 +2,7 @@
   hosts:
     - phenotips
   vars: 
-    - application_name: hgmd_webrelay
+    - application_name: {{ dir_hgmd_webrelay }}
     - branch_name: include_certificates
   roles:
     - deploy

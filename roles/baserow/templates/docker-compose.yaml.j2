@@ -15,6 +15,7 @@ services:
     container_name: baserow
     image: baserow/baserow:latest
     restart: always
+    shm_size: 2gb
     environment:
       BASEROW_PUBLIC_URL: 'https://{{ host_url }}'
       BATCH_ROWS_SIZE_LIMIT: '30000'

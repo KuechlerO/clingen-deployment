@@ -3,7 +3,7 @@
     - phenotips
   tags: clinical_report_templating
   vars:
-    application_name: clinical-report-templating
+    application_name: "{{ dir_clinical_report_templating }}"
     branch_name: include_certificates
   tasks:
     - name: Download repository

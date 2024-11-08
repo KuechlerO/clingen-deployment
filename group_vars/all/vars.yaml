@@ -2,7 +2,12 @@ github_user: xiamaz
 control_user: zhaom
 run_user: cgdeploy
 run_group: cgdeploy
-deploy_root: /srv/clingen_deployment
 proxy_url: "http://proxy.charite.de:8080"
 no_proxy: "bihealth.org,charite.de,laborberlin.intern"
 certbot_email: max.zhao@charite.de
+
+deploy_root: /srv/clingen_deployment
+dir_baserow: baserow
+dir_cads_data_exchange: cads_data_exchange
+dir_clinical_report_templating: clinical-report-templating
+dir_hgmd_webrelay: hgmd-webrelay

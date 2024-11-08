@@ -3,7 +3,9 @@
     - longer
     - phenotips
   roles:
-    - baserow
+    - role: baserow
+      vars:
+        application_name: "{{ dir_baserow }}"
     
 - name: Setup baserow and exchange utilies
   hosts:
@@ -12,24 +14,26 @@
     - deploy
     - wmg_read_only
     - wmg_baserow_export
+  vars:
+    application_name: "{{ dir_cads_data_exchange }}"
   tasks:
     - name: Ensure cronjobs repository exists
       ansible.builtin.git:
         # repo: https://{{github_user}}:{{github_token}}@github.com/xiamaz/cads_data_exchange.git
         repo: https://github.com/KuechlerO/cads_data_exchange
-        dest: "{{ deploy_root }}/cads_data_exchange"
+        dest: "{{ deploy_root }}/{{ application_name }}"
     - name: Place secrets configuration
       template:
-        dest: "{{ deploy_root }}/cads_data_exchange/.secrets.toml"
+        dest: "{{ deploy_root }}/{{ application_name }}/.secrets.toml"
         src: "templates/cads_data_exchange_secrets.toml"
         mode: 400
     - name: Place baserow token
       copy:
-        dest: "{{ deploy_root }}/cads_data_exchange/.baserow_token"
+        dest: "{{ deploy_root }}/{{ application_name }}/.baserow_token"
         content: "{{ baserow_token }}"
     - name: Place Backup password
       copy:
-        dest: "{{ deploy_root }}/cads_data_exchange/.backup_password"
+        dest: "{{ deploy_root }}/{{ application_name }}/.backup_password"
         content: "{{ backup_password }}"
     - name: Ensure dependencies are installed
       become: true
@@ -38,7 +42,7 @@
         state: latest
     - name: Ensure library is installed
       args:
-        chdir: "{{ deploy_root }}/cads_data_exchange"
+        chdir: "{{ deploy_root }}/{{ application_name }}"
       shell: |
         micromamba run -n cads_data_exchange pip install -e .
     - name: Create frequent data exchange cronjob
@@ -46,14 +50,14 @@
         name: Sync terminland
         user: "{{ control_user }}"
         minute: "3-59/5"
-        job: "{{ deploy_root }}/cads_data_exchange/cron_frequent.sh"
+        job: "{{ deploy_root }}/{{ application_name }}/cron_frequent.sh"
     - name: Create tri-daily data exchange cronjob
       cron:
         name: Sync baserow
         user: "{{ control_user }}"
         minute: "15"
         hour: "12,17,5"
-        job: "{{ deploy_root }}/cads_data_exchange/cron.sh"
+        job: "{{ deploy_root }}/{{ application_name }}/cron.sh"
 
     - name: Create daily docker backup cronjob
       cron:
@@ -61,4 +65,4 @@
         user: "{{ control_user }}"
         minute: "0"
         hour: "0"
-        job: "{{ deploy_root }}/cads_data_exchange/run_baserow_backup.sh"
+        job: "{{ deploy_root }}/{{ application_name }}/run_baserow_backup.sh {{ deploy_root }}/{{ dir_baserow }}"
